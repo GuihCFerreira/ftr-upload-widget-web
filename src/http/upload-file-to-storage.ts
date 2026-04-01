@@ -9,7 +9,7 @@ export async function uploadFileToStorage({ file }: UploadFileToStorageParams) {
   data.append("file", file);
 
   const response = await axios.post<{ url: string }>(
-    "http://localhost:3333/upload",
+    `${import.meta.env.VITE_BACKEND_URL}/upload`,
     data,
     {
       headers: {
