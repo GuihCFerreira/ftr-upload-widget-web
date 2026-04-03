@@ -4,6 +4,7 @@ import { immer } from "zustand/middleware/immer";
 import { uploadFileToStorage } from "../http/upload-file-to-storage";
 import { CanceledError } from "axios";
 import { useShallow } from "zustand/shallow";
+import { compressImage } from "../utils/compress-image";
 
 export type Upload = {
   name: string;
@@ -38,9 +39,16 @@ export const useUploads = create<UploadState, [["zustand/immer", never]]>(
       if (!upload) return;
 
       try {
+        const compressedFile = await compressImage({
+          file: upload.file,
+          maxHeight: 200,
+          maxWidth: 200,
+          quality: 0.5,
+        });
+
         await uploadFileToStorage(
           {
-            file: upload.file,
+            file: compressedFile,
             onProgress(sizeInBytes) {
               updateUpload(uploadId, { uploadSizeInBytes: sizeInBytes });
             },
