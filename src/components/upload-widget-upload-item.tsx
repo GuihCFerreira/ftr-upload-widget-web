@@ -13,7 +13,10 @@ interface UploadWidgetUploadItemProps {
 export function UploadWidgetUploadItem({ upload, uploadId }: UploadWidgetUploadItemProps) {
 
   const cancelUpload = useUploads(store => store.cancelUpload);
-  const progress = Math.min(Math.round((upload.uploadSizeInBytes * 100) / upload.originalSizeInBytes), 100)
+  const progress = Math.min(
+    upload.compressedSizeInBytes ? Math.round((upload.uploadSizeInBytes * 100) / upload.compressedSizeInBytes) : 0,
+    100
+  )
 
   return (
     <motion.div
@@ -34,7 +37,7 @@ export function UploadWidgetUploadItem({ upload, uploadId }: UploadWidgetUploadI
           <span className="line-through">{formatBytes(upload.originalSizeInBytes)}</span>
           <div className="size-1 rounded-full bg-zinc-700" />
           <span>
-            300 KB
+            {upload.compressedSizeInBytes && formatBytes(upload.compressedSizeInBytes)}
             <span className="text-green-400 ml-1">
               -94%
             </span>
@@ -69,8 +72,9 @@ export function UploadWidgetUploadItem({ upload, uploadId }: UploadWidgetUploadI
         </Button>
 
         <Button
-          disabled={upload.status !== "success"}
+          disabled={!upload.remoteUrl || upload.status !== "success"}
           size="icon-sm"
+          onClick={() => upload.remoteUrl && navigator.clipboard.writeText(upload.remoteUrl)}
         >
           <Link2 className="size-4" strokeWidth={1.5} />
           <span className="sr-only">Copy remote URL</span>
