@@ -17,7 +17,7 @@ export function UploadWidgetUploadList() {
       </span>
 
       <ScrollArea.Root type="scroll" className="overflow-hidden">
-        <ScrollArea.Viewport className="h-[220px]">
+        <ScrollArea.Viewport className="max-h-[220px]">
           {isUploadListEmpty ? (
             <span className="text-xs text-zinc-400">No uploads added</span>
           ) : (

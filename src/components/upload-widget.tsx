@@ -23,7 +23,7 @@ export function UploadWidget() {
             width: "max-content",
             height: 44,
             transition: {
-              type: "inertia",
+              duration: 0.1,
             },
           },
           open: {
@@ -47,7 +47,8 @@ export function UploadWidget() {
             <div className="h-px bg-zinc-800 border-t border-black/50 box-content" />
 
             <UploadWidgetUploadList />
-          </div></Collapsible.Content>
+          </div>
+        </Collapsible.Content>
       </motion.div>
     </Collapsible.Root>
   )
