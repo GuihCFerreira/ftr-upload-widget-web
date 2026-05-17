@@ -1,0 +1,54 @@
+
+name: Preview deploy to Vercel
+
+on:
+  push:
+    branches-ignore: 
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v5
+
+      - name: Configure Node
+        id: configure-node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        id: install-pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install dependencies
+        id: install-dependencies
+        run: |
+          pnpm install
+      
+      - name: Install Vercel CLI
+        id: install-vercel-cli
+        run: |
+          pnpm install -g vercel
+
+      - name: Pull Vercel config
+        id: pull-vercel-config
+        run: |
+          vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+      
+      - name: Build app 
+        id: build-app
+        run: |
+          vercel build --token=${{ secrets.VERCEL_TOKEN }}
+      
+      - name: Deploy app to Vercel 
+        id: deploy-app-to-vercel
+        run: |
+          vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
